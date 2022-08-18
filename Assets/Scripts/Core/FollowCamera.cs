@@ -1,15 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-namespace GDTV
+namespace RPG.Core
 {
     public class FollowCamera : MonoBehaviour
     {
         [SerializeField] private Transform target;
 
-        private void Update()
+        private void LateUpdate()
         {
             if (!target) return;
 

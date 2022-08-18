@@ -1,33 +1,30 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace GDTV
+namespace RPG.Movement
 {
     public class Mover : MonoBehaviour
     {
         private Ray _lastRay;
         private NavMeshAgent _agent;
         private Animator _animator;
-        private Camera _camera;
         private static readonly int ForwardSpeed = Animator.StringToHash("forwardSpeed");
 
         private void Start()
         {
-            _camera = Camera.main;
             _agent = GetComponent<NavMeshAgent>();
             _animator = GetComponent<Animator>();
         }
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0)) MoveToCoordinates();
             UpdateAnimator();
         }
 
-        private void MoveToCoordinates()
+
+        public void MoveTo(Vector3 destination)
         {
-            var ray = _camera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out var hit)) _agent.SetDestination(hit.point);
+            _agent.SetDestination(destination);
         }
 
         private void UpdateAnimator()
