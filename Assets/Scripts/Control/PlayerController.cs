@@ -22,7 +22,6 @@ namespace RPG.Control
         {
             if (InteractWithCombat()) return;
             if (InteractWithMovement()) return;
-            Debug.Log("At the end of the world!");
         }
 
         private bool InteractWithCombat()
