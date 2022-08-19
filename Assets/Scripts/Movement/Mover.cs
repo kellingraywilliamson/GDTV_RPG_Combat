@@ -1,4 +1,5 @@
 using RPG.Combat;
+using RPG.Core;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,6 +11,7 @@ namespace RPG.Movement
         private NavMeshAgent _agent;
         private Animator _animator;
         private Fighter _fighter;
+        private ActionScheduler _actionScheduler;
         private static readonly int ForwardSpeed = Animator.StringToHash("forwardSpeed");
 
         private void Start()
@@ -17,6 +19,7 @@ namespace RPG.Movement
             _agent = GetComponent<NavMeshAgent>();
             _animator = GetComponent<Animator>();
             _fighter = GetComponent<Fighter>();
+            _actionScheduler = GetComponent<ActionScheduler>();
         }
 
         private void Update()
@@ -33,6 +36,7 @@ namespace RPG.Movement
 
         public void StartMoveAction(Vector3 destination)
         {
+            _actionScheduler.StartAction(this);
             _fighter.CancelFighting();
             MoveTo(destination);
         }
