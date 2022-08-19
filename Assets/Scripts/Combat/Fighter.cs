@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RPG.Combat
 {
-    public class Fighter : MonoBehaviour
+    public class Fighter : MonoBehaviour, IAction
     {
         [SerializeField] private float weaponRange = 2f;
 
@@ -26,7 +26,7 @@ namespace RPG.Combat
             if (!InWeaponRange)
                 _mover.MoveTo(_target.position);
             else
-                _mover.StopMoving();
+                _mover.Cancel();
         }
 
         public void Attack(CombatTarget combatTarget)
@@ -35,7 +35,7 @@ namespace RPG.Combat
             _target = combatTarget.transform;
         }
 
-        public void CancelFighting()
+        public void Cancel()
         {
             _target = null;
         }

@@ -1,16 +1,14 @@
-using RPG.Combat;
 using RPG.Core;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace RPG.Movement
 {
-    public class Mover : MonoBehaviour
+    public class Mover : MonoBehaviour, IAction
     {
         private Ray _lastRay;
         private NavMeshAgent _agent;
         private Animator _animator;
-        private Fighter _fighter;
         private ActionScheduler _actionScheduler;
         private static readonly int ForwardSpeed = Animator.StringToHash("forwardSpeed");
 
@@ -18,7 +16,6 @@ namespace RPG.Movement
         {
             _agent = GetComponent<NavMeshAgent>();
             _animator = GetComponent<Animator>();
-            _fighter = GetComponent<Fighter>();
             _actionScheduler = GetComponent<ActionScheduler>();
         }
 
@@ -37,19 +34,19 @@ namespace RPG.Movement
         public void StartMoveAction(Vector3 destination)
         {
             _actionScheduler.StartAction(this);
-            _fighter.CancelFighting();
             MoveTo(destination);
         }
 
-        public void StopMoving()
-        {
-            _agent.isStopped = true;
-        }
 
         private void UpdateAnimator()
         {
             var localVelocity = transform.InverseTransformDirection(_agent.velocity);
             _animator.SetFloat(ForwardSpeed, localVelocity.z);
+        }
+
+        public void Cancel()
+        {
+            _agent.isStopped = true;
         }
     }
 }
