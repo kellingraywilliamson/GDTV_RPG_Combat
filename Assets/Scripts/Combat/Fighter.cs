@@ -8,6 +8,7 @@ namespace RPG.Combat
     public class Fighter : MonoBehaviour, IAction
     {
         [SerializeField] private float weaponRange = 2f;
+        [SerializeField] private float weaponDamage = 10f;
         [SerializeField] private float timeBetweenAttacks = 1f;
 
         private Transform _target;
@@ -62,6 +63,8 @@ namespace RPG.Combat
 
         private void Hit()
         {
+            var targetHealth = _target.GetComponent<Health>();
+            if (targetHealth != null) targetHealth.TakeDamage(weaponDamage);
         }
     }
 }
