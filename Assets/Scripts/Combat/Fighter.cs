@@ -1,3 +1,4 @@
+using System;
 using RPG.Core;
 using RPG.Movement;
 using UnityEngine;
@@ -7,11 +8,13 @@ namespace RPG.Combat
     public class Fighter : MonoBehaviour, IAction
     {
         [SerializeField] private float weaponRange = 2f;
+        [SerializeField] private float timeBetweenAttacks = 1f;
 
         private Transform _target;
         private Mover _mover;
         private ActionScheduler _actionScheduler;
         private Animator _animator;
+        private DateTime _lastAttackTime;
 
         private static readonly int AttackTrigger = Animator.StringToHash("attack");
 
@@ -40,7 +43,10 @@ namespace RPG.Combat
 
         private void AttackBehaviour()
         {
+            if (!((DateTime.Now - _lastAttackTime).TotalSeconds >= timeBetweenAttacks)) return;
+
             _animator.SetTrigger(AttackTrigger);
+            _lastAttackTime = DateTime.Now;
         }
 
         public void Attack(CombatTarget combatTarget)
