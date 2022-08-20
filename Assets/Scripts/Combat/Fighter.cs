@@ -30,8 +30,7 @@ namespace RPG.Combat
 
         private void Update()
         {
-            if (_target == null) return;
-            if (!_target.IsAlive) return;
+            if (_target == null || !_target.IsAlive) return;
 
             if (!InWeaponRange)
             {
