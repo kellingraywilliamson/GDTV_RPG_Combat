@@ -29,8 +29,9 @@ namespace RPG.Control
             foreach (var hit in Physics.RaycastAll(GetMouseRay()))
             {
                 var target = hit.transform.GetComponent<CombatTarget>();
-                if (!_fighter.CanAttack(target)) continue;
-                if (Input.GetMouseButtonDown(0)) _fighter.Attack(target);
+                if (target == null) continue;
+                if (!_fighter.CanAttack(target.gameObject)) continue;
+                if (Input.GetMouseButtonDown(0)) _fighter.Attack(target.gameObject);
                 return true;
             }
 

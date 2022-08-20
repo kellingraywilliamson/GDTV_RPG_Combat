@@ -68,6 +68,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2408109637129271232, guid: df01d8c408847495eb0c4ab0dd34cd71,
+        type: 3}
+      propertyPath: m_Speed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2408109637129271242, guid: df01d8c408847495eb0c4ab0dd34cd71,
+        type: 3}
+      propertyPath: weaponDamage
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 5560560348876732069, guid: df01d8c408847495eb0c4ab0dd34cd71,
         type: 3}
       propertyPath: m_RootOrder
@@ -162,6 +172,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82df01099f3e449285fc3bcf3d58193e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7798280468034605934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3344790168931434851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba1719b5108b4554ac384de89da1d604, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chaseDistance: 5
 --- !u!4 &4020756302515859278 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5560560348876732069, guid: df01d8c408847495eb0c4ab0dd34cd71,
