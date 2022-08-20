@@ -11,6 +11,9 @@ namespace RPG.Combat
         private Transform _target;
         private Mover _mover;
         private ActionScheduler _actionScheduler;
+        private Animator _animator;
+
+        private static readonly int AttackTrigger = Animator.StringToHash("attack");
 
         private bool InWeaponRange => Vector3.Distance(transform.position, _target.position) < weaponRange;
 
@@ -18,15 +21,26 @@ namespace RPG.Combat
         {
             _mover = GetComponent<Mover>();
             _actionScheduler = GetComponent<ActionScheduler>();
+            _animator = GetComponent<Animator>();
         }
 
         private void Update()
         {
             if (_target == null) return;
             if (!InWeaponRange)
+            {
                 _mover.MoveTo(_target.position);
+            }
             else
+            {
                 _mover.Cancel();
+                AttackBehaviour();
+            }
+        }
+
+        private void AttackBehaviour()
+        {
+            _animator.SetTrigger(AttackTrigger);
         }
 
         public void Attack(CombatTarget combatTarget)
@@ -38,6 +52,10 @@ namespace RPG.Combat
         public void Cancel()
         {
             _target = null;
+        }
+
+        private void Hit()
+        {
         }
     }
 }
