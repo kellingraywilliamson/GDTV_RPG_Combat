@@ -1,3 +1,4 @@
+using System;
 using RPG.Combat;
 using RPG.Core;
 using UnityEngine;
@@ -10,7 +11,11 @@ namespace RPG.Control
         private Fighter _fighter;
         private Health _health;
         private GameObject _player;
-        private float DistanceToPlayer => Vector3.Distance(transform.position, _player.transform.position);
+
+        private float DistanceToPlayer => _player == null
+            ? Mathf.Infinity
+            : Vector3.Distance(transform.position, _player.transform.position);
+
         private bool PlayerWithinChaseDistance => DistanceToPlayer <= chaseDistance;
 
         private void Start()
@@ -28,6 +33,12 @@ namespace RPG.Control
                 _fighter.Attack(_player);
             else
                 _fighter.Cancel();
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = PlayerWithinChaseDistance ? Color.red : Color.blue;
+            Gizmos.DrawWireSphere(transform.position, chaseDistance);
         }
     }
 }
