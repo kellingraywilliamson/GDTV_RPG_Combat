@@ -1,5 +1,5 @@
-using System.Linq;
 using RPG.Combat;
+using RPG.Core;
 using RPG.Movement;
 using UnityEngine;
 
@@ -9,6 +9,7 @@ namespace RPG.Control
     {
         private Camera _camera;
         private Fighter _fighter;
+        private Health _health;
         private Mover _mover;
 
         private void Start()
@@ -16,10 +17,13 @@ namespace RPG.Control
             _camera = Camera.main;
             _mover = GetComponent<Mover>();
             _fighter = GetComponent<Fighter>();
+            _health = GetComponent<Health>();
         }
 
         private void Update()
         {
+            if (!_health.IsAlive) return;
+
             if (InteractWithCombat()) return;
             if (InteractWithMovement()) return;
         }
@@ -29,8 +33,9 @@ namespace RPG.Control
             foreach (var hit in Physics.RaycastAll(GetMouseRay()))
             {
                 var target = hit.transform.GetComponent<CombatTarget>();
-                if (!_fighter.CanAttack(target)) continue;
-                if (Input.GetMouseButtonDown(0)) _fighter.Attack(target);
+                if (target == null) continue;
+                if (!_fighter.CanAttack(target.gameObject)) continue;
+                if (Input.GetMouseButton(0)) _fighter.Attack(target.gameObject);
                 return true;
             }
 
@@ -40,7 +45,7 @@ namespace RPG.Control
         private bool InteractWithMovement()
         {
             if (!Physics.Raycast(GetMouseRay(), out var hit)) return false;
-            if (Input.GetMouseButtonDown(0)) _mover.StartMoveAction(hit.point);
+            if (Input.GetMouseButton(0)) _mover.StartMoveAction(hit.point);
             return true;
         }
 

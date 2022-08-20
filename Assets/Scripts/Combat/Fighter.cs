@@ -30,8 +30,7 @@ namespace RPG.Combat
 
         private void Update()
         {
-            if (_target == null) return;
-            if (!_target.IsAlive) return;
+            if (_target == null || !_target.IsAlive) return;
 
             if (!InWeaponRange)
             {
@@ -56,7 +55,7 @@ namespace RPG.Combat
             _animator.SetTrigger(AbortAttackTrigger);
         }
 
-        public bool CanAttack(CombatTarget target)
+        public bool CanAttack(GameObject target)
         {
             return target != null && target.GetComponent<Health>().IsAlive;
         }
@@ -75,7 +74,7 @@ namespace RPG.Combat
             _animator.SetTrigger(AttackTrigger);
         }
 
-        public void Attack(CombatTarget combatTarget)
+        public void Attack(GameObject combatTarget)
         {
             _actionScheduler.StartAction(this);
             _target = combatTarget.GetComponent<Health>();
