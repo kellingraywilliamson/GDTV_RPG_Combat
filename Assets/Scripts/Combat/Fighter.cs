@@ -45,7 +45,6 @@ namespace RPG.Combat
         private void AttackBehaviour()
         {
             if (!((DateTime.Now - _lastAttackTime).TotalSeconds >= timeBetweenAttacks)) return;
-
             _animator.SetTrigger(AttackTrigger);
             _lastAttackTime = DateTime.Now;
         }
@@ -63,6 +62,7 @@ namespace RPG.Combat
 
         private void Hit()
         {
+            if (_target == null) return;
             var targetHealth = _target.GetComponent<Health>();
             if (targetHealth != null) targetHealth.TakeDamage(weaponDamage);
         }
