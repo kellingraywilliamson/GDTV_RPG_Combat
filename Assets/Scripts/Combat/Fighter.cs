@@ -18,8 +18,8 @@ namespace RPG.Combat
 
         private Mover _mover;
         private Health _target;
-
         private bool InWeaponRange => Vector3.Distance(transform.position, _target.transform.position) < weaponRange;
+        private bool TimeBetweenAttacksElapsed => (DateTime.Now - _lastAttackTime).TotalSeconds >= timeBetweenAttacks;
 
         private void Start()
         {
@@ -46,16 +46,33 @@ namespace RPG.Combat
 
         public void Cancel()
         {
-            _animator.SetTrigger(AbortAttackTrigger);
+            StopAttack();
             _target = null;
+        }
+
+        private void StopAttack()
+        {
+            _animator.ResetTrigger(AttackTrigger);
+            _animator.SetTrigger(AbortAttackTrigger);
+        }
+
+        public bool CanAttack(CombatTarget target)
+        {
+            return target != null && target.GetComponent<Health>().IsAlive;
         }
 
         private void AttackBehaviour()
         {
             transform.LookAt(_target.transform);
-            if (!((DateTime.Now - _lastAttackTime).TotalSeconds >= timeBetweenAttacks)) return;
-            _animator.SetTrigger(AttackTrigger);
+            if (!TimeBetweenAttacksElapsed) return;
+            TriggerAttack();
             _lastAttackTime = DateTime.Now;
+        }
+
+        private void TriggerAttack()
+        {
+            _animator.ResetTrigger(AbortAttackTrigger);
+            _animator.SetTrigger(AttackTrigger);
         }
 
         public void Attack(CombatTarget combatTarget)

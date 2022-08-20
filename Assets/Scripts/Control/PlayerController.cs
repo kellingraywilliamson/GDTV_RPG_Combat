@@ -26,11 +26,10 @@ namespace RPG.Control
 
         private bool InteractWithCombat()
         {
-            foreach (var hit in Physics.RaycastAll(GetMouseRay())
-                         .Where(x => x.transform.GetComponent<CombatTarget>() != null))
+            foreach (var hit in Physics.RaycastAll(GetMouseRay()))
             {
                 var target = hit.transform.GetComponent<CombatTarget>();
-
+                if (!_fighter.CanAttack(target)) continue;
                 if (Input.GetMouseButtonDown(0)) _fighter.Attack(target);
                 return true;
             }
