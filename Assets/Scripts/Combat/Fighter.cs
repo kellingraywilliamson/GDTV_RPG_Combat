@@ -11,15 +11,16 @@ namespace RPG.Combat
         [SerializeField] private float weaponDamage = 10f;
         [SerializeField] private float timeBetweenAttacks = 1f;
 
-        private Transform _target;
+        private Health _target;
         private Mover _mover;
         private ActionScheduler _actionScheduler;
         private Animator _animator;
         private DateTime _lastAttackTime;
 
         private static readonly int AttackTrigger = Animator.StringToHash("attack");
+        private static readonly int AbortAttackTrigger = Animator.StringToHash("abortAttack");
 
-        private bool InWeaponRange => Vector3.Distance(transform.position, _target.position) < weaponRange;
+        private bool InWeaponRange => Vector3.Distance(transform.position, _target.transform.position) < weaponRange;
 
         private void Start()
         {
@@ -31,9 +32,11 @@ namespace RPG.Combat
         private void Update()
         {
             if (_target == null) return;
+            if (!_target.IsAlive) return;
+
             if (!InWeaponRange)
             {
-                _mover.MoveTo(_target.position);
+                _mover.MoveTo(_target.transform.position);
             }
             else
             {
@@ -52,19 +55,19 @@ namespace RPG.Combat
         public void Attack(CombatTarget combatTarget)
         {
             _actionScheduler.StartAction(this);
-            _target = combatTarget.transform;
+            _target = combatTarget.GetComponent<Health>();
         }
 
         public void Cancel()
         {
+            _animator.SetTrigger(AbortAttackTrigger);
             _target = null;
         }
 
         private void Hit()
         {
             if (_target == null) return;
-            var targetHealth = _target.GetComponent<Health>();
-            if (targetHealth != null) targetHealth.TakeDamage(weaponDamage);
+            _target.TakeDamage(weaponDamage);
         }
     }
 }
