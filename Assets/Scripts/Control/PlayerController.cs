@@ -35,7 +35,7 @@ namespace RPG.Control
                 var target = hit.transform.GetComponent<CombatTarget>();
                 if (target == null) continue;
                 if (!_fighter.CanAttack(target.gameObject)) continue;
-                if (Input.GetMouseButtonDown(0)) _fighter.Attack(target.gameObject);
+                if (Input.GetMouseButton(0)) _fighter.Attack(target.gameObject);
                 return true;
             }
 
@@ -45,7 +45,7 @@ namespace RPG.Control
         private bool InteractWithMovement()
         {
             if (!Physics.Raycast(GetMouseRay(), out var hit)) return false;
-            if (Input.GetMouseButtonDown(0)) _mover.StartMoveAction(hit.point);
+            if (Input.GetMouseButton(0)) _mover.StartMoveAction(hit.point);
             return true;
         }
 

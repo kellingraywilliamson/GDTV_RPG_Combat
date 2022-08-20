@@ -10,14 +10,21 @@ namespace RPG.Control
     {
         [SerializeField] private float chaseDistance = 5f;
         [SerializeField] private float staySuspiciousDuration = 3f;
+        [SerializeField] private PatrolPath patrolPath;
+        [SerializeField] private float waypointTolerance = .5f;
+        [SerializeField] private float dwellAtWaypointDuration = 3f;
         private ActionScheduler _actionScheduler;
+        private int _currentWaypointIndex;
         private Fighter _fighter;
         private Health _health;
-
         private Mover _mover;
         private Vector3 _originalStartingPosition;
         private GameObject _player;
+        private DateTime _timeArrivedAtWaypoint;
         private DateTime _timeLastSawPlayer;
+
+        private double SecondsSinceArrivedAtWaypoint => (DateTime.Now - _timeArrivedAtWaypoint).TotalSeconds;
+
         private double SecondsSinceLastSawPlayer => (DateTime.Now - _timeLastSawPlayer).TotalSeconds;
 
         private float DistanceToPlayer => _player == null
@@ -25,6 +32,15 @@ namespace RPG.Control
             : Vector3.Distance(transform.position, _player.transform.position);
 
         private bool PlayerWithinChaseDistance => DistanceToPlayer <= chaseDistance;
+
+        private bool AtWaypoint
+        {
+            get
+            {
+                if (patrolPath == null) return false;
+                return Vector3.Distance(transform.position, GetCurrentWaypoint()) < waypointTolerance;
+            }
+        }
 
         private void Start()
         {
@@ -45,7 +61,7 @@ namespace RPG.Control
             else if (SecondsSinceLastSawPlayer <= staySuspiciousDuration)
                 SuspicionBehaviour();
             else
-                GuardBehaviour();
+                PatroBehaviour();
         }
 
         private void OnDrawGizmosSelected()
@@ -54,10 +70,33 @@ namespace RPG.Control
             Gizmos.DrawWireSphere(transform.position, chaseDistance);
         }
 
-        private void GuardBehaviour()
+        private void PatroBehaviour()
         {
             _fighter.Cancel();
-            _mover.StartMoveAction(_originalStartingPosition);
+            var nextPosition = _originalStartingPosition;
+
+            if (patrolPath != null)
+            {
+                if (AtWaypoint)
+                {
+                    _timeArrivedAtWaypoint = DateTime.Now;
+                    TargetNextWaypoint();
+                }
+
+                nextPosition = GetCurrentWaypoint();
+            }
+
+            if (SecondsSinceArrivedAtWaypoint >= dwellAtWaypointDuration) _mover.StartMoveAction(nextPosition);
+        }
+
+        private void TargetNextWaypoint()
+        {
+            _currentWaypointIndex = patrolPath.GetNextIndex(_currentWaypointIndex);
+        }
+
+        private Vector3 GetCurrentWaypoint()
+        {
+            return patrolPath.GetWaypointPosition(_currentWaypointIndex);
         }
 
         private void SuspicionBehaviour()
