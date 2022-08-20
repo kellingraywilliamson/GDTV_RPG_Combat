@@ -6,11 +6,11 @@ namespace RPG.Movement
 {
     public class Mover : MonoBehaviour, IAction
     {
-        private Ray _lastRay;
+        private static readonly int ForwardSpeed = Animator.StringToHash("forwardSpeed");
+        private ActionScheduler _actionScheduler;
         private NavMeshAgent _agent;
         private Animator _animator;
-        private ActionScheduler _actionScheduler;
-        private static readonly int ForwardSpeed = Animator.StringToHash("forwardSpeed");
+        private Ray _lastRay;
 
         private void Start()
         {
@@ -22,6 +22,11 @@ namespace RPG.Movement
         private void Update()
         {
             UpdateAnimator();
+        }
+
+        public void Cancel()
+        {
+            _agent.isStopped = true;
         }
 
 
@@ -42,11 +47,6 @@ namespace RPG.Movement
         {
             var localVelocity = transform.InverseTransformDirection(_agent.velocity);
             _animator.SetFloat(ForwardSpeed, localVelocity.z);
-        }
-
-        public void Cancel()
-        {
-            _agent.isStopped = true;
         }
     }
 }

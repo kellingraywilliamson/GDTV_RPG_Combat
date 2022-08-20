@@ -7,18 +7,17 @@ namespace RPG.Combat
 {
     public class Fighter : MonoBehaviour, IAction
     {
+        private static readonly int AttackTrigger = Animator.StringToHash("attack");
+        private static readonly int AbortAttackTrigger = Animator.StringToHash("abortAttack");
         [SerializeField] private float weaponRange = 2f;
         [SerializeField] private float weaponDamage = 10f;
         [SerializeField] private float timeBetweenAttacks = 1f;
-
-        private Health _target;
-        private Mover _mover;
         private ActionScheduler _actionScheduler;
         private Animator _animator;
         private DateTime _lastAttackTime;
 
-        private static readonly int AttackTrigger = Animator.StringToHash("attack");
-        private static readonly int AbortAttackTrigger = Animator.StringToHash("abortAttack");
+        private Mover _mover;
+        private Health _target;
 
         private bool InWeaponRange => Vector3.Distance(transform.position, _target.transform.position) < weaponRange;
 
@@ -45,8 +44,15 @@ namespace RPG.Combat
             }
         }
 
+        public void Cancel()
+        {
+            _animator.SetTrigger(AbortAttackTrigger);
+            _target = null;
+        }
+
         private void AttackBehaviour()
         {
+            transform.LookAt(_target.transform);
             if (!((DateTime.Now - _lastAttackTime).TotalSeconds >= timeBetweenAttacks)) return;
             _animator.SetTrigger(AttackTrigger);
             _lastAttackTime = DateTime.Now;
@@ -56,12 +62,6 @@ namespace RPG.Combat
         {
             _actionScheduler.StartAction(this);
             _target = combatTarget.GetComponent<Health>();
-        }
-
-        public void Cancel()
-        {
-            _animator.SetTrigger(AbortAttackTrigger);
-            _target = null;
         }
 
         private void Hit()

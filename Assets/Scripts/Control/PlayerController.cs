@@ -7,9 +7,9 @@ namespace RPG.Control
 {
     public class PlayerController : MonoBehaviour
     {
-        private Mover _mover;
         private Camera _camera;
         private Fighter _fighter;
+        private Mover _mover;
 
         private void Start()
         {

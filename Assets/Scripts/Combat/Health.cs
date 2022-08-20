@@ -5,11 +5,10 @@ namespace RPG.Combat
 {
     public class Health : MonoBehaviour
     {
-        [SerializeField] private float startingHealth = 100f;
-
         private static readonly int DieTrigger = Animator.StringToHash("die");
-        private bool _deathAnimationPlayed;
+        [SerializeField] private float startingHealth = 100f;
         private Animator _animator;
+        private bool _deathAnimationPlayed;
 
         public float CurrentHealthPoints { get; private set; } = 0;
 
